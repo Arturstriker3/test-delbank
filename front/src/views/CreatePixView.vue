@@ -5,6 +5,6 @@
 
 <template>
     <div>
-        <h2>Criar Pix</h2>
+        <h2>Gerar Pix</h2>
     </div>
 </template>
