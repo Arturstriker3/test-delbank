@@ -14,9 +14,13 @@ usersStore.getAll();
 
 <template>
     <div>
-        <h1>Hi {{authUser?.firstName}}!</h1>
-        <p>You're logged in with Vue 3 + Pinia & JWT!!</p>
-        <h3>Users from secure api end point:</h3>
+        <h1>Olá {{authUser?.lastName}}!</h1>
+        <!-- <p>Vupix funciona com Vue 3 + Pinia & JWT!!</p> -->
+        <div class="alert alert-info">
+            Bank Account: {{authUser?.bankAccount}} <br/>
+            key: {{ authUser?.key.substring(0, 30) }}...
+        </div>
+        <h3>Usuários obtidos do end point da api:</h3>
         <ul v-if="users.length">
             <li v-for="user in users" :key="user.id">{{user.firstName}} {{user.lastName}}</li>
         </ul>

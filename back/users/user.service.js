@@ -1,10 +1,11 @@
 ﻿const config = require('config.json');
 const jwt = require('jsonwebtoken');
 
-// users hardcoded for simplicity, store in a db for production applications
+// users hardcoded for simplicity
 const users = [
-    { id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User' },
-    { id: 2, username: 'admin', password: 'admin', firstName: 'Root', lastName: 'Admin' }
+    { id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User', bankAccount: '31712', key: 'PJPyJ2xGmyB9oDHyNIUwNOt1dgpgolBwcE16ybaKD5rYEc8ujLtarBP0nNw2FKdgK+5YJFciFwTdORlZsdaTzjEbKN5ut+Ag4xGy69bbtXJmzkzRDHry9ubYbMW4xFMb' },
+    { id: 2, username: 'admin', password: 'admin', firstName: 'Root', lastName: 'Admin', bankAccount: '29823', key: 'PJPyJ2xGmyB9oDHyNIUwNOt1dgpgolBwcE16ybaKD5q5eXIoHXNudlu+EaCcwXyLnryGdeBNfqofzLQe9f7s/iMVnsMZrbAPO/cYn6pTQEHVErYL080/hmZYV8faI89D'},
+    { id: 3, username: 'elon', password: 'musk', firstName: ' Elon Reeve', lastName: 'Musk', bankAccount: '30422', key: 'PJPyJ2xGmyB9oDHyNIUwNOt1dgpgolBwcE16ybaKD5pqVEGTBg/p+APpf4ALsiVmjdB8Qh1tgmKPCyx1kSOz7Hd9IsepYPj6a0odInh0gT5hycP6CbnVo7+9TxvjnCtS'}
 ];
 
 module.exports = {
