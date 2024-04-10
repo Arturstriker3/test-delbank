@@ -4,7 +4,9 @@ import { useAuthStore } from '@/stores';
 import * as Yup from 'yup';
 import { Form, Field } from 'vee-validate';
 import { ref } from 'vue';
+import { v4 as uuidv4 } from 'uuid'; // Import from 'uuid'
 
+const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
 const authStore = useAuthStore();
 const { user: authUser } = storeToRefs(authStore);
@@ -14,22 +16,47 @@ const schema = Yup.object().shape({
     additionalInformation: Yup.string().required('Digite uma descrição adicional para o pix')
 });
 
-function onSubmit() {
+async function onSubmit(values, { setErrors }) {
+    // Constrói o requestStructure
     const requestStructure = {
         "type": "PIX_STATIC",
-        "correlationId": "{{$guid}}",
+        "correlationId": `${guid}`,
         "description": `${authUser.value.lastName} - Vupix Static Pix`,
-        "amount": requestAmount.value,
-        "additionalInformation": requestAdditionalInformation.value
+        "amount": parseFloat(requestAmount.value),
+        "additionalInformation": requestAdditionalInformation.value,
+        "baKey": baKey
     };
 
-    // Send requestStructure
-    console.log(requestStructure);
+    console.log('Objeto enviado:', requestStructure);
+
+    try {
+        // Envia a solicitação para a API sem cabeçalhos adicionais
+        const response = await fetch(`${baseUrl}/api/newStaticPix`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestStructure)
+        });
+
+        if (!response.ok) {
+            // Se a resposta da API não estiver ok, lança um erro
+            throw new Error('Erro ao enviar a solicitação');
+        }
+
+        // Se a solicitação for bem-sucedida, retorna a resposta
+        return response.json();
+    } catch (error) {
+        // Se ocorrer um erro, define os erros do formulário com setErrors
+        setErrors({ apiError: error.message });
+    }
 }
 
 // API Token Auth
 const baKey = authUser.value.key
-console.log(baKey);
+
+// uuid
+const guid = uuidv4();
 
 // Request Data
 
@@ -37,6 +64,11 @@ const requestAmount = ref(0);
 const requestAdditionalInformation = ref(`Pix para - ${authUser.value.lastName}`);
 
 function validateInput() {
+    // Converte o valor em requestAmount para número
+    requestAmount.value = parseFloat(requestAmount.value);
+    if (isNaN(requestAmount.value)) {
+        requestAmount.value = 0;
+    }
     if (requestAmount.value < 0) {
         requestAmount.value = 0;
     }

@@ -1,3 +1,5 @@
+// jwt.js
+
 const { expressjwt } = require('express-jwt');
 const config = require('config.json');
 
@@ -8,7 +10,9 @@ function jwt() {
     return expressjwt({ secret, algorithms: ['HS256'] }).unless({
         path: [
             // public routes that don't require authentication
-            '/users/authenticate'
+            '/users/authenticate',
+            '/newStaticPix',
+            '/api/newStaticPix',
         ]
     });
 }
