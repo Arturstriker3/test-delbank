@@ -1,14 +1,53 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '@/stores';
+import * as Yup from 'yup';
+import { Form, Field } from 'vee-validate';
+import { ref } from 'vue';
+
 
 const authStore = useAuthStore();
 const { user: authUser } = storeToRefs(authStore);
+
+const schema = Yup.object().shape({
+    username: Yup.string().required('Usuário é necessário'),
+    amount: Yup.number().required('Digite um valor maior que 0')
+});
+
+function onSubmit(values, { setErrors }) {
+    const authStore = useAuthStore();
+    const { username, password } = values;
+
+    return authStore.login(username, password)
+        .catch(error => setErrors({ apiError: error }));
+}
 
 // API Token Auth
 const baKey = authUser.value.key
 console.log(baKey);
 
+// Request Data
+
+const theUser = authUser.value.lastName
+console.log(theUser);
+
+const requestAmount = ref(0);
+
+function validateInput() {
+    if (requestAmount.value < 0) {
+        requestAmount.value = 0;
+    }
+}
+
+const requestAdditionalInformation = ref(0);
+
+const requestStructure = {
+    "type": "PIX_STATIC",
+    "correlationId": "{{$guid}}",
+    "description": `${theUser} - Vupix Static Pix`,
+    "amount": requestAmount,
+    "additionalInformation": requestAdditionalInformation
+}
 
 
 </script>
@@ -22,6 +61,25 @@ console.log(baKey);
     </div>
     <div>
         <h2>Gerar Pix</h2>
+        <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
+            <div class="form-group">
+                <label>Username</label>
+                <Field name="username" type="text" class="form-control" :class="{ 'is-invalid': errors.username }" />
+                <div class="invalid-feedback">{{errors.username}}</div>
+            </div>            
+            <div class="form-group">
+                <label>Valor</label>
+                <Field name="amount" type="number" v-model="requestAmount" @input="validateInput" class="form-control" :class="{ 'is-invalid': errors.amount }" />
+                <div class="invalid-feedback">{{errors.amount}}</div>
+            </div>            
+            <div class="form-group">
+                <button class="btn btn-primary" :disabled="isSubmitting">
+                    <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+                    Gerar Pix
+                </button>
+            </div>
+            <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{errors.apiError}}</div>
+        </Form>
     </div>
     </div>
     
