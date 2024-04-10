@@ -10,17 +10,21 @@ const authStore = useAuthStore();
 const { user: authUser } = storeToRefs(authStore);
 
 const schema = Yup.object().shape({
-    username: Yup.string().required('Usuário é necessário'),
     amount: Yup.number().required('Digite um valor maior que 0'),
     additionalInformation: Yup.string().required('Digite uma descrição adicional para o pix')
 });
 
-function onSubmit(values, { setErrors }) {
-    const authStore = useAuthStore();
-    const { username, password } = values;
+function onSubmit() {
+    const requestStructure = {
+        "type": "PIX_STATIC",
+        "correlationId": "{{$guid}}",
+        "description": `${authUser.value.lastName} - Vupix Static Pix`,
+        "amount": requestAmount.value,
+        "additionalInformation": requestAdditionalInformation.value
+    };
 
-    return authStore.login(username, password)
-        .catch(error => setErrors({ apiError: error }));
+    // Send requestStructure
+    console.log(requestStructure);
 }
 
 // API Token Auth
@@ -29,27 +33,14 @@ console.log(baKey);
 
 // Request Data
 
-const theUser = authUser.value.lastName
-console.log(theUser);
-
 const requestAmount = ref(0);
+const requestAdditionalInformation = ref(`Pix para - ${authUser.value.lastName}`);
 
 function validateInput() {
     if (requestAmount.value < 0) {
         requestAmount.value = 0;
     }
 }
-
-const requestAdditionalInformation = ref(`Pix para - ${theUser}`);
-
-const requestStructure = {
-    "type": "PIX_STATIC",
-    "correlationId": "{{$guid}}",
-    "description": `${theUser} - Vupix Static Pix`,
-    "amount": requestAmount,
-    "additionalInformation": requestAdditionalInformation
-}
-
 
 </script>
 
