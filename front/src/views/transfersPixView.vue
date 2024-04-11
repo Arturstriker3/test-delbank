@@ -1,11 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
+const baseUrl = `${import.meta.env.VITE_API_URL}`;
+
 const transfers = ref([]);
 
 onMounted(async () => {
     try {
-        const response = await fetch('http://localhost:4000/api/allTransfers');
+        const response = await fetch(`${baseUrl}/api/allTransfers`);
         if (!response.ok) {
             throw new Error('Erro ao obter as transferências');
         }
