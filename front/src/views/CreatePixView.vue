@@ -101,7 +101,7 @@ function copyToClipboard() {
             <img style="max-width: 300px;" class="d-block" :src="generatedPix.qrCodeImageBase64" alt="QR Code">
         </div>
         <p class="text-center" style="margin-top: 16px;">
-            <span @click="copyToClipboard" style="cursor: pointer; background-color: #333; color: #fff; padding: 5px 10px; border-radius: 5px;" title="Clique para copiar">{{ generatedPix.qrCodePayload }}</span>
+            <span @click="copyToClipboard" style="cursor: pointer; font-size: 8px; background-color: #333; color: #fff; padding: 8px 8px; border-radius: 8px;" title="Clique para copiar">{{ generatedPix.qrCodePayload }}</span>
         </p>
     </div>
     <div v-if="Object.keys(generatedPix).length == 0">
