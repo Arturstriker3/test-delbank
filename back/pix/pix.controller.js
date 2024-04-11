@@ -29,7 +29,6 @@ router.post('/newStaticPix', async (req, res, next) => {
             console.log('Result Controler:', result)
             // Retornar os dados do Pix para o front-end
             res.status(200).json(result);
-            transfers.push(result);
         } else {
             res.status(500).json({ message: 'Erro ao processar o Pix' });
         }
@@ -59,6 +58,7 @@ router.post('/payStaticPix', async (req, res, next) => {
             // Retornar os dados do pagamento para o front-end
             console.log('Paid Pix Controler:', result)
             res.status(200).json(result);
+            transfers.push(result);
         } else {
             res.status(500).json({ message: 'Erro ao processar o pagamento do Pix' });
         }

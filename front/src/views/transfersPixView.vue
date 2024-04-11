@@ -1,16 +1,39 @@
 <script setup>
-import { storeToRefs } from 'pinia';
-import { useAuthStore } from '@/stores';
-import * as Yup from 'yup';
-import { Form, Field } from 'vee-validate';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
+const transfers = ref([]);
+
+onMounted(async () => {
+    try {
+        const response = await fetch('http://localhost:4000/api/allTransfers');
+        if (!response.ok) {
+            throw new Error('Erro ao obter as transferências');
+        }
+        transfers.value = await response.json();
+    } catch (error) {
+        console.error(error);
+    }
+});
 
 </script>
 
 <template>
     <div>
-        <h2>transferências</h2>
+      <h2 style="margin-bottom: 24px;" >Transferências</h2>
+      <div v-if="transfers.length > 0">
+        <ul>
+          <li v-for="(transfer, index) in transfers" :key="index">
+            <!-- Exibir os detalhes da transferência -->
+            <p>{{ transfer.key }}</p>
+            <p>Valor: {{ transfer.amount }}</p>
+            <p>Conta: {{ transfer.beneficiary.number }}</p>
+            <p>Beneficiário: {{ transfer.beneficiary.participant.name }}</p>
+            <hr>
+          </li>
+        </ul>
+      </div>
+      <div v-else>
+        Não existem transferências.
+      </div>
     </div>
-    
-</template>
+  </template>

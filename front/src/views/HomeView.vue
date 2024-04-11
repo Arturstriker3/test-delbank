@@ -20,7 +20,7 @@ usersStore.getAll();
             Bank Account: {{authUser?.bankAccount}} <br/>
             key: {{ authUser?.key.substring(0, 30) }}...
         </div>
-        <h3>Usuários obtidos do end point da api:</h3>
+        <h3>Usuários obtidos da API:</h3>
         <ul v-if="users.length">
             <li v-for="user in users" :key="user.id">{{user.firstName}} {{user.lastName}}</li>
         </ul>
