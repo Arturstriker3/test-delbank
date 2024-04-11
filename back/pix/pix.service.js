@@ -28,6 +28,7 @@ async function newStaticPix(requestBody) {
 
         // Verificar se a resposta da API foi bem-sucedida
         if (response.status === 200) {
+            console.log('Response Service:', response.data)
             return response.data; // Retorna os dados do Pix em caso de sucesso
         } else {
             throw new Error(`Erro ao criar o Pix. Status: ${response.status}`);

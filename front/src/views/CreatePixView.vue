@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores';
 import * as Yup from 'yup';
 import { Form, Field } from 'vee-validate';
 import { ref } from 'vue';
-import { v4 as uuidv4 } from 'uuid'; // Import from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 
 const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
@@ -17,7 +17,6 @@ const schema = Yup.object().shape({
 });
 
 async function onSubmit(values, { setErrors }) {
-    // Constrói o requestStructure
     const requestStructure = {
         "type": "PIX_STATIC",
         "correlationId": `${guid}`,
@@ -30,7 +29,6 @@ async function onSubmit(values, { setErrors }) {
     console.log('Objeto enviado:', requestStructure);
 
     try {
-        // Envia a solicitação para a API sem cabeçalhos adicionais
         const response = await fetch(`${baseUrl}/api/newStaticPix`, {
             method: 'POST',
             headers: {
@@ -40,14 +38,15 @@ async function onSubmit(values, { setErrors }) {
         });
 
         if (!response.ok) {
-            // Se a resposta da API não estiver ok, lança um erro
             throw new Error('Erro ao enviar a solicitação');
         }
 
-        // Se a solicitação for bem-sucedida, retorna a resposta
-        return response.json();
+        const responseData = await response.json();
+        console.log('Resposta:', responseData); // Imprime a resposta no console
+        generatedPix.value = responseData; // Guarda a resposta em generatedPix
+
+        return responseData;
     } catch (error) {
-        // Se ocorrer um erro, define os erros do formulário com setErrors
         setErrors({ apiError: error.message });
     }
 }
@@ -74,6 +73,18 @@ function validateInput() {
     }
 }
 
+const generatedPix = ref({});
+
+function copyToClipboard() {
+    const el = document.createElement('textarea');
+    el.value = generatedPix.value.qrCodePayload;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('Conteúdo copiado para a área de transferência!');
+}
+
 </script>
 
 <template>
@@ -83,7 +94,17 @@ function validateInput() {
         Bank Account: {{authUser?.bankAccount}} <br/>
         key: {{ authUser?.key.substring(0, 30) }}...
     </div>
-    <div>
+    <div v-if="Object.keys(generatedPix).length > 0">
+        <h2 class="text-center">Pix Gerado</h2>
+        <div style="max-width: 300px; margin: auto;">
+            <p class="text-center">{{ generatedPix.description }}</p>
+            <img style="max-width: 300px;" class="d-block" :src="generatedPix.qrCodeImageBase64" alt="QR Code">
+        </div>
+        <p class="text-center" style="margin-top: 16px;">
+            <span @click="copyToClipboard" style="cursor: pointer; background-color: #333; color: #fff; padding: 5px 10px; border-radius: 5px;" title="Clique para copiar">{{ generatedPix.qrCodePayload }}</span>
+        </p>
+    </div>
+    <div v-if="Object.keys(generatedPix).length == 0">
         <h2>Gerar Pix</h2>
         <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">           
             <div class="form-group">

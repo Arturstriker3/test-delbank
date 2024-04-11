@@ -21,8 +21,14 @@ router.post('/newStaticPix', async (req, res, next) => {
         // Chamar o serviço para criar o novo Pix
         const result = await pixService.newStaticPix(req.body);
 
-        // Retornar o resultado
-        res.status(201).json(result);
+        // Verificar se a resposta da API foi bem-sucedida
+        if (result) {
+            console.log('Result Controler:', result)
+            // Retornar os dados do Pix para o front-end
+            res.status(200).json(result);
+        } else {
+            res.status(500).json({ message: 'Erro ao processar o Pix' });
+        }
     } catch (error) {
         next(error);
     }
