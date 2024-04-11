@@ -25,7 +25,6 @@ onMounted(async () => {
       <div v-if="transfers.length > 0">
         <ul>
           <li v-for="(transfer, index) in transfers" :key="index">
-            <!-- Exibir os detalhes da transferência -->
             <p>{{ transfer.key }}</p>
             <p>Valor: {{ transfer.amount }}</p>
             <p>Conta: {{ transfer.beneficiary.number }}</p>

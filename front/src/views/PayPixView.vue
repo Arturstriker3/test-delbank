@@ -36,7 +36,7 @@ async function onSubmit(values, { setErrors }) {
         }
 
         const responseData = await response.json();
-        console.log('Resposta Pagamento:', responseData); // Imprime a resposta no console
+        console.log('Resposta Pagamento:', responseData); // Test Response
         paidPix.value = responseData;
 
         return responseData;

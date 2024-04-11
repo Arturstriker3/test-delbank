@@ -4,30 +4,30 @@ const express = require('express');
 const router = express.Router();
 const pixService = require('./pix.service');
 
-// Variável global para armazenar os pagamentos
+// Store All Transfers
 let transfers = [];
 
-// Rota para criar um novo Pix estático
+// Routes to Create Static Pix and Pay Static Pix
 router.post('/newStaticPix', async (req, res, next) => {
     try {
-        // Extrair os dados necessários do corpo da requisição
+        // Get data from request body
         const { type, correlationId, description, amount, additionalInformation, baKey } = req.body;
 
-        // Log dos dados recebidos
+        // Log receive data
         console.log('Objeto recebido /newStaticPix:', req.body);
 
-        // Verificar se os dados necessários foram fornecidos
+        // Check if all data was received
         if (!type || !correlationId || !description || !amount || !additionalInformation || !baKey) {
             return res.status(400).json({ message: 'Dados do Pix incompletos' });
         }
 
-        // Chamar o serviço para criar o novo Pix
+        // Call service to create new static Pix
         const result = await pixService.newStaticPix(req.body);
 
-        // Verificar se a resposta da API foi bem-sucedida
+        // Check if the API response was successful
         if (result) {
             console.log('Result Controler:', result)
-            // Retornar os dados do Pix para o front-end
+            // Returne Pix data to front-end
             res.status(200).json(result);
         } else {
             res.status(500).json({ message: 'Erro ao processar o Pix' });
@@ -39,23 +39,23 @@ router.post('/newStaticPix', async (req, res, next) => {
 
 router.post('/payStaticPix', async (req, res, next) => {
     try {
-        // Extrair os dados necessários do corpo da requisição
+        // Extract data from request body
         const { payload, baKey } = req.body;
 
-        // Log dos dados recebidos
+        // Log received data
         console.log('Objeto recebido /payStaticPix:', req.body);
 
-        // Verificar se os dados necessários foram fornecidos
+        // Check if all data was received
         if (!payload || !baKey) {
             return res.status(400).json({ message: 'Dados do Pix incompletos' });
         }
 
-        // Chamar o serviço para pagar o Pix estático
+        // Call service to pay static Pix
         const result = await pixService.payStaticPix(payload, baKey);
 
-        // Verificar se a resposta da API foi bem-sucedida
+        // Check if the API response was successful
         if (result) {
-            // Retornar os dados do pagamento para o front-end
+            // Return Pix data to front-end
             console.log('Paid Pix Controler:', result)
             res.status(200).json(result);
             transfers.push(result);
@@ -69,7 +69,7 @@ router.post('/payStaticPix', async (req, res, next) => {
 
 router.get('/allTransfers', (req, res, next) => {
     try {
-        // Retornar o array de transferências em formato JSON
+        // Return array JSON Format
         res.status(200).json(transfers);
     } catch (error) {
         next(error);

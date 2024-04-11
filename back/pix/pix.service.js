@@ -8,29 +8,29 @@ module.exports = {
 
 async function newStaticPix(requestBody) {
     try {
-        // Remover a chave 'baKey' do objeto requestBody e usá-la como cabeçalho
+        // Remove key 'baKey' from obj requestBody and use as header
         const { baKey, ...pixData } = requestBody;
 
-        // Configurar o cabeçalho com a chave 'x-delbank-api-key'
+        // Configure header with key 'x-delbank-api-key'
         const headers = {
             'Content-Type': 'application/json',
             'x-delbank-api-key': baKey
         };
 
-        // Log do objeto enviado para a API do Delbank e o cabeçalho
+        // Log obj sended to Delbank API and header
         console.log('Objeto enviado para API Delbank:', pixData);
         console.log('Header:', headers);
 
-        // Enviar os dados restantes para a API do Delbank
+        // Send new charge data to Delbank API
         const response = await axios.post('https://apisandbox.delbank.com.br/baas/api/v1/charges', pixData, { headers });
 
-        // Log do código de status da resposta da API do Delbank
+        // Log code status Delbank API
         console.log('Código de status da resposta da API do Delbank:', response.status);
 
-        // Verificar se a resposta da API foi bem-sucedida
+        // Check API response
         if (response.status === 200) {
             console.log('Response Service:', response.data)
-            return response.data; // Retorna os dados do Pix em caso de sucesso
+            return response.data; // Return Pix data when sucess
         } else {
             throw new Error(`Erro ao criar o Pix. Status: ${response.status}`);
         }
@@ -54,18 +54,18 @@ async function payStaticPix(payload, baKey) {
             }
         };
 
-        // Enviar a solicitação para a API do Delbank para inicializar o pagamento do Pix
+        // Send Request to Delbank API starting Pix payment 
         const response = await axios.request(options);
 
-        // Log do código de status da resposta da API do Delbank
+        // Log code status from Delbank API
         console.log('Código de status da resposta da API do Delbank:', response.status);
 
-        // Log dos dados da resposta da API do Delbank
+        // Log response from Delbank API
         console.log('Dados da resposta da API do Delbank:', response.data);
 
-        // Verificar se a resposta da API foi bem-sucedida
+        // Check response status
         if (response.status === 200) {
-            return response.data; // Retorna os dados do pagamento do Pix em caso de sucesso
+            return response.data; // Return data about payments when sucess
         } else {
             throw new Error(`Erro ao inicializar o pagamento do Pix. Status: ${response.status}`);
         }
