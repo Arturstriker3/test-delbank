@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import { useAuthStore } from '@/stores';
-import { HomeView, LoginView, CreatePixView, PayPixView } from '@/views';
+import { HomeView, LoginView, CreatePixView, PayPixView, transfersPixView } from '@/views';
 
 export const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,7 +10,8 @@ export const router = createRouter({
         { path: '/', component: HomeView },
         { path: '/login', component: LoginView },
         { path: '/newpix', component: CreatePixView },
-        { path: '/paypix', component: PayPixView }
+        { path: '/paypix', component: PayPixView },
+        { path: '/transfers', component: transfersPixView }
     ]
 });
 

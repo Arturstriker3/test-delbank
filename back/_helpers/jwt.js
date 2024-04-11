@@ -14,6 +14,7 @@ function jwt() {
             '/newStaticPix',
             '/api/newStaticPix',
             '/api/payStaticPix',
+            '/api/allTransfers',
         ]
     });
 }

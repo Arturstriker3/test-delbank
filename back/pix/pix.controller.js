@@ -4,6 +4,9 @@ const express = require('express');
 const router = express.Router();
 const pixService = require('./pix.service');
 
+// Variável global para armazenar os pagamentos
+let transfers = [];
+
 // Rota para criar um novo Pix estático
 router.post('/newStaticPix', async (req, res, next) => {
     try {
@@ -26,6 +29,7 @@ router.post('/newStaticPix', async (req, res, next) => {
             console.log('Result Controler:', result)
             // Retornar os dados do Pix para o front-end
             res.status(200).json(result);
+            transfers.push(result);
         } else {
             res.status(500).json({ message: 'Erro ao processar o Pix' });
         }
@@ -58,6 +62,15 @@ router.post('/payStaticPix', async (req, res, next) => {
         } else {
             res.status(500).json({ message: 'Erro ao processar o pagamento do Pix' });
         }
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/allTransfers', (req, res, next) => {
+    try {
+        // Retornar o array de transferências em formato JSON
+        res.status(200).json(transfers);
     } catch (error) {
         next(error);
     }

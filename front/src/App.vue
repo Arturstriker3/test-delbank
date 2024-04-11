@@ -13,6 +13,7 @@ const authStore = useAuthStore();
                 <RouterLink to="/" class="nav-item nav-link">Home</RouterLink>
                 <RouterLink to="/newpix" class="nav-item nav-link">Gerar Pix</RouterLink>
                 <RouterLink to="/paypix" class="nav-item nav-link">Pagar Pix</RouterLink>
+                <RouterLink to="/transfers" class="nav-item nav-link">Ver Pix</RouterLink>
                 <a @click="authStore.logout()" class="nav-item nav-link">Logout</a>
             </div>
         </nav>
