@@ -76,6 +76,7 @@ const paidPix = ref({});
             Bank Account: {{authUser?.bankAccount}} <br/>
             key: {{ authUser?.key.substring(0, 30) }}...
             <p class="text-center" style="margin-top: 16px;">
+                Copy Exemplo
             <span @click="copyToClipboard" style="cursor: pointer; font-size: 8px; background-color: #333; color: #fff; padding: 8px 8px; border-radius: 8px;" title="Clique para copiar">{{ qrcExample }}</span>
         </p>
         </div>
