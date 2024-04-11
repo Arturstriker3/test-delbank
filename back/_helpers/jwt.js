@@ -13,6 +13,7 @@ function jwt() {
             '/users/authenticate',
             '/newStaticPix',
             '/api/newStaticPix',
+            '/api/payStaticPix',
         ]
     });
 }

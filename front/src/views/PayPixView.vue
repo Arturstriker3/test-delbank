@@ -37,13 +37,26 @@ async function onSubmit(values, { setErrors }) {
 
         const responseData = await response.json();
         console.log('Resposta Pagamento:', responseData); // Imprime a resposta no console
-        paidPix.value = responseData; // Guarda a resposta em generatedPix
+        paidPix.value = responseData;
 
         return responseData;
     } catch (error) {
         setErrors({ apiError: error.message });
     }
 }
+
+function copyToClipboard() {
+    const el = document.createElement('textarea');
+    el.value = qrcExample;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('Conteúdo copiado para a área de transferência!');
+}
+
+// Example QR Code Payload
+const qrcExample = "00020126770014br.gov.bcb.pix01365b0ac9a4-fad6-43f9-be70-6d7c9a2fad260215Testando qrcode52040000530398654049.995802BR5920HOMOLOGACAO INTEGRAC6007ARACAJU62290525charged4Jw0qHWPaXUFs5CAzu6304FFB1"
 
 // API Token Auth
 const baKey = authUser.value.key
@@ -62,23 +75,36 @@ const paidPix = ref({});
             Pagamento de Pix Estático<br/>
             Bank Account: {{authUser?.bankAccount}} <br/>
             key: {{ authUser?.key.substring(0, 30) }}...
+            <p class="text-center" style="margin-top: 16px;">
+            <span @click="copyToClipboard" style="cursor: pointer; font-size: 8px; background-color: #333; color: #fff; padding: 8px 8px; border-radius: 8px;" title="Clique para copiar">{{ qrcExample }}</span>
+        </p>
         </div>
-        <h2>Pagar Pix</h2>
-        <div>
-        <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">           
-            <div class="form-group">
-                <label>Digite o QR Code Payload</label>
-                <Field name="qrcPayload" type="text" v-model="qrcPayload" class="form-control" :class="{ 'is-invalid': errors.qrcPayload }" />
-                <div class="invalid-feedback">{{errors.qrcPayload}}</div>
-            </div>          
-            <div class="form-group">
-                <button class="btn btn-primary" :disabled="isSubmitting">
-                    <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
-                    Pagar Pix
-                </button>
+        <div v-if="Object.keys(paidPix).length > 0">
+            <h2 class="text-center">Pix Pago</h2>
+            <div style="max-width: 300px; margin: auto;">
+                <p class="text-center">{{ paidPix.key }}</p>
+                <p class="text-center">Tipo: {{ paidPix.type }}</p>
+                <p class="text-center">Valor: {{ paidPix.amount }}</p>
             </div>
-            <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{errors.apiError}}</div>
-        </Form>
-    </div>
+        </div>
+        <div v-if="Object.keys(paidPix).length == 0">
+            <h2>Pagar Pix</h2>
+            <div>
+                <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">           
+                    <div class="form-group">
+                        <label>Digite o QR Code Payload</label>
+                        <Field name="qrcPayload" type="text" v-model="qrcPayload" class="form-control" :class="{ 'is-invalid': errors.qrcPayload }" />
+                        <div class="invalid-feedback">{{errors.qrcPayload}}</div>
+                    </div>          
+                    <div class="form-group">
+                        <button class="btn btn-primary" :disabled="isSubmitting">
+                            <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+                            Pagar Pix
+                        </button>
+                    </div>
+                    <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{errors.apiError}}</div>
+                </Form>
+            </div>
+        </div>
     </div>
 </template>
